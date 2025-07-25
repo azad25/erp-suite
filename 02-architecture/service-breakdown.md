@@ -132,7 +132,89 @@ PERMISSIONS = {
 
 ## Business Domain Services
 
-### 4. HRM Service (Django)
+### 4. Subscription & Billing Service (Django)
+
+**Responsibilities:**
+- Subscription lifecycle management
+- Multi-provider payment processing
+- Usage tracking and metering
+- Feature access control and gating
+- Trial management and conversion
+- Customer billing portal
+- Revenue analytics and reporting
+
+**Service Structure:**
+```python
+# apps/subscriptions/
+├── services/
+│   ├── subscription_service.py  # Subscription management
+│   ├── billing_service.py       # Billing operations
+│   ├── payment_service.py       # Payment processing
+│   ├── usage_service.py         # Usage tracking
+│   ├── plan_service.py          # Plan management
+│   └── feature_service.py       # Feature gating
+├── models/
+│   ├── subscription.py         # Subscription models
+│   ├── plan.py                 # Plan models
+│   ├── invoice.py              # Invoice models
+│   ├── payment.py              # Payment models
+│   └── usage.py                # Usage models
+├── integrations/
+│   ├── stripe_integration.py   # Stripe payment processor
+│   ├── paypal_integration.py   # PayPal integration
+│   └── webhook_handlers.py     # Payment webhooks
+└── tasks.py                    # Celery billing tasks
+```
+
+**Key Business Logic:**
+```python
+class SubscriptionService:
+    def create_subscription(self, organization_id, plan_id, payment_method):
+        # Create subscription with trial period
+        # Set up payment method
+        # Activate plan features
+        # Send welcome email
+        # Publish subscription_created event
+        
+    def upgrade_subscription(self, subscription_id, new_plan_id):
+        # Calculate proration
+        # Process payment difference
+        # Update feature access
+        # Send upgrade confirmation
+        # Publish subscription_upgraded event
+        
+    def track_usage(self, organization_id, feature, quantity=1):
+        # Record usage event
+        # Check usage limits
+        # Calculate overages
+        # Trigger alerts if needed
+        # Update usage analytics
+```
+
+**Event Publishing:**
+```python
+# Events published to Kafka
+EVENTS = [
+    'subscription.created',
+    'subscription.upgraded',
+    'subscription.downgraded',
+    'subscription.cancelled',
+    'payment.succeeded',
+    'payment.failed',
+    'usage.limit_exceeded',
+    'trial.expiring',
+    'trial.converted'
+]
+```
+
+**Interactions:**
+- **→ Payment Gateways**: Process payments via Stripe, PayPal
+- **→ Email Service**: Send billing notifications
+- **→ All Business Services**: Enforce feature access and usage limits
+- **→ Analytics Service**: Provide billing and usage data
+- **← All Business Services**: Receive usage tracking events
+
+### 5. HRM Service (Django)
 
 **Responsibilities:**
 - Employee lifecycle management
@@ -199,7 +281,7 @@ EVENTS = [
 - **→ Report Service**: Generate HR reports
 - **← AI Service**: Receive AI-generated insights
 
-### 5. CRM Service (Django)
+### 6. CRM Service (Django)
 
 **Responsibilities:**
 - Contact and lead management
@@ -257,7 +339,7 @@ class LeadScoringService:
 - **→ Invoice Service**: Convert opportunities to invoices
 - **← AI Service**: Lead scoring and recommendations
 
-### 6. Finance Service (Django)
+### 7. Finance Service (Django)
 
 **Responsibilities:**
 - Accounting and bookkeeping
@@ -315,7 +397,7 @@ class JournalService:
 - **→ Report Service**: Generate financial reports
 - **← CRM Service**: Receive opportunity data
 
-### 7. Inventory Service (Django)
+### 8. Inventory Service (Django)
 
 **Responsibilities:**
 - Product catalog management
@@ -376,7 +458,7 @@ class StockService:
 - **→ Report Service**: Generate inventory reports
 - **← AI Service**: Demand forecasting insights
 
-### 8. Project Management Service (Django)
+### 9. Project Management Service (Django)
 
 **Responsibilities:**
 - Project and task management
@@ -430,7 +512,7 @@ class ResourceService:
 
 ## Microservices (Go)
 
-### 9. Invoice Generation Service (Go)
+### 10. Invoice Generation Service (Go)
 
 **Responsibilities:**
 - PDF invoice generation
@@ -515,7 +597,7 @@ func (s *InvoiceService) handlePaymentReceived(event PaymentReceivedEvent) {
 }
 ```
 
-### 10. Report Generation Service (Go)
+### 11. Report Generation Service (Go)
 
 **Responsibilities:**
 - Complex report generation
@@ -581,7 +663,7 @@ func (s *ReportService) GenerateFinancialReport(ctx context.Context, req *pb.Fin
 }
 ```
 
-### 11. Email Service (Go)
+### 12. Email Service (Go)
 
 **Responsibilities:**
 - Email delivery and tracking
@@ -637,7 +719,7 @@ func (s *EmailService) SendEmail(ctx context.Context, req *pb.SendEmailRequest) 
 }
 ```
 
-### 12. File Processing Service (Go)
+### 13. File Processing Service (Go)
 
 **Responsibilities:**
 - File upload and storage
@@ -660,7 +742,7 @@ func (s *EmailService) SendEmail(ctx context.Context, req *pb.SendEmailRequest) 
 │   │   └── video_processor.go   # Video processing
 ```
 
-### 13. Search Service (Go)
+### 14. Search Service (Go)
 
 **Responsibilities:**
 - Elasticsearch integration
@@ -684,7 +766,7 @@ func (s *EmailService) SendEmail(ctx context.Context, req *pb.SendEmailRequest) 
 
 ## AI Services
 
-### 14. AI Gateway Service (Python/FastAPI)
+### 15. AI Gateway Service (Python/FastAPI)
 
 **Responsibilities:**
 - AI request routing and management
@@ -706,7 +788,7 @@ func (s *EmailService) SendEmail(ctx context.Context, req *pb.SendEmailRequest) 
 │   └── context.py              # Context models
 ```
 
-### 15. RAG Engine Service (Python)
+### 16. RAG Engine Service (Python)
 
 **Responsibilities:**
 - Document embedding and indexing

@@ -64,17 +64,19 @@ This folder contains the system architecture, design patterns, and technical spe
 ## Architecture Overview
 
 ### System Layers
-1. **Presentation Layer**: Next.js/React frontend, AI chat interface
+1. **Presentation Layer**: Next.js/React frontend, AI chat interface, billing portal
 2. **AI Layer**: AI Gateway, RAG Engine, Context Manager
-3. **Application Layer**: Core business services, API Gateway
-4. **Infrastructure Layer**: Event bus, caching, search, file storage
+3. **Application Layer**: Core business services, subscription service, API Gateway
+4. **Infrastructure Layer**: Event bus, caching, search, file storage, payment processing
 5. **Data Layer**: PostgreSQL, MongoDB, Vector database
 
 ### Key Architectural Patterns
 - **Microservices Architecture**: Independent, scalable services
 - **Event-Driven Communication**: Kafka-based async messaging
 - **Domain-Driven Design**: Business domain separation
-- **Multi-Tenant SaaS**: Organization-based data isolation
+- **Multi-Tenant SaaS**: Organization-based data isolation with subscription management
+- **Subscription-Based Billing**: Automated billing cycles with usage tracking
+- **Feature Gating**: Dynamic access control based on subscription plans
 - **AI-First Design**: Integrated AI capabilities throughout
 
 ### Technology Decisions

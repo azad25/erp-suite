@@ -105,6 +105,20 @@ The Intelligent ERP Suite leverages a modern, scalable technology stack designed
 - **Multi-Tenant Authentication**: JWT tokens, OAuth2 integration, RBAC, MFA
 - **Permission System**: Admin, Staff, Vendor, Custom roles with fine-grained permissions
 
+## Payment Processing & Billing
+
+### Payment Gateways
+- **Stripe**: Primary payment processor with comprehensive API
+- **PayPal**: Alternative payment method for global customers
+- **Square**: Point-of-sale and online payment processing
+- **Webhook Handling**: Secure webhook processing for payment events
+
+### Billing Infrastructure
+- **Django + Celery**: Automated billing cycle processing
+- **Redis**: Payment retry queues and rate limiting
+- **PostgreSQL**: Subscription and billing data storage
+- **PDF Generation**: Invoice and receipt generation
+
 ## AI & Machine Learning Stack
 
 ### Large Language Models (LLM)

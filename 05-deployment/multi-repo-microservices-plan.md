@@ -6,7 +6,7 @@ This document outlines the comprehensive plan for developing the Intelligent ERP
 
 ## Repository Architecture
 
-### Total Repositories: 13
+### Total Repositories: 14
 
 #### Core Infrastructure (3 Repositories)
 
@@ -28,7 +28,7 @@ This document outlines the comprehensive plan for developing the Intelligent ERP
 - **Team**: DevOps/Platform Team
 - **Dependencies**: None
 
-#### Core Business Services (6 Repositories)
+#### Core Business Services (7 Repositories)
 
 **4. `erp-auth-service`** - Authentication & Authorization
 - **Purpose**: Multi-tenant auth, RBAC, JWT management
@@ -36,44 +36,50 @@ This document outlines the comprehensive plan for developing the Intelligent ERP
 - **Team**: Security/Platform Team
 - **Dependencies**: erp-shared-libs
 
-**5. `erp-hrm-service`** - Human Resource Management
+**5. `erp-subscription-service`** - Subscription & Billing Management
+- **Purpose**: Subscription lifecycle, billing, payment processing, usage tracking, feature gating
+- **Technology**: Django + DRF + Celery + PostgreSQL + Redis
+- **Team**: Subscription Team
+- **Dependencies**: erp-shared-libs, erp-auth-service
+
+**6. `erp-hrm-service`** - Human Resource Management
 - **Purpose**: Employee, leave, attendance, payroll management
 - **Technology**: Django + PostgreSQL
 - **Team**: HRM Team
-- **Dependencies**: erp-shared-libs, erp-auth-service
+- **Dependencies**: erp-shared-libs, erp-auth-service, erp-subscription-service
 
-**6. `erp-crm-service`** - Customer Relationship Management
+**7. `erp-crm-service`** - Customer Relationship Management
 - **Purpose**: Contacts, leads, opportunities, sales pipeline
 - **Technology**: Django + PostgreSQL
 - **Team**: CRM Team  
-- **Dependencies**: erp-shared-libs, erp-auth-service
+- **Dependencies**: erp-shared-libs, erp-auth-service, erp-subscription-service
 
-**7. `erp-finance-service`** - Finance & Accounting
+**8. `erp-finance-service`** - Finance & Accounting
 - **Purpose**: Accounting, invoicing, payments, financial reports
 - **Technology**: Django + PostgreSQL
 - **Team**: Finance Team
-- **Dependencies**: erp-shared-libs, erp-auth-service
+- **Dependencies**: erp-shared-libs, erp-auth-service, erp-subscription-service
 
-**8. `erp-inventory-service`** - Inventory Management
+**9. `erp-inventory-service`** - Inventory Management
 - **Purpose**: Products, warehouses, stock, orders
 - **Technology**: Django + PostgreSQL  
 - **Team**: Inventory Team
-- **Dependencies**: erp-shared-libs, erp-auth-service
+- **Dependencies**: erp-shared-libs, erp-auth-service, erp-subscription-service
 
-**9. `erp-project-service`** - Project Management
+**10. `erp-project-service`** - Project Management
 - **Purpose**: Projects, tasks, time tracking, resources
 - **Technology**: Django + PostgreSQL
 - **Team**: Project Team
-- **Dependencies**: erp-shared-libs, erp-auth-service#### Sup
+- **Dependencies**: erp-shared-libs, erp-auth-service, erp-subscription-service#### Sup
 port Services (2 Repositories)
 
-**10. `erp-notification-service`** - Notifications & Communication
+**11. `erp-notification-service`** - Notifications & Communication
 - **Purpose**: Email, SMS, push notifications, WebSocket management
 - **Technology**: Go + Redis + Kafka
 - **Team**: Platform Team
 - **Dependencies**: erp-shared-libs, erp-auth-service
 
-**11. `erp-file-service`** - File Management
+**12. `erp-file-service`** - File Management
 - **Purpose**: File upload/download, document management, PDF generation
 - **Technology**: Go + Object Storage (S3/MinIO)
 - **Team**: Platform Team
@@ -81,13 +87,13 @@ port Services (2 Repositories)
 
 #### AI and Frontend (2 Repositories)
 
-**12. `erp-ai-platform`** - AI Services & Chatbot
+**13. `erp-ai-platform`** - AI Services & Chatbot
 - **Purpose**: AI Gateway, RAG Engine, Chatbot, Plugin system
 - **Technology**: Python/FastAPI + Vector DB + LLM APIs
 - **Team**: AI Team
 - **Dependencies**: erp-shared-libs, erp-auth-service
 
-**13. `erp-frontend`** - Frontend Applications
+**14. `erp-frontend`** - Frontend Applications
 - **Purpose**: Next.js web app, admin dashboard, mobile app
 - **Technology**: Next.js/React + TypeScript
 - **Team**: Frontend Team
@@ -119,44 +125,46 @@ port Services (2 Repositories)
 - [ ] **Testing Framework**: Shared testing utilities and patterns
 - [ ] **Documentation**: API documentation standards and tools
 
-#### Month 3: Service Communication
-**Week 9-10: Inter-Service Communication**
-- [ ] **gRPC Contracts**: Define service-to-service communication
-- [ ] **Event System**: Set up Kafka for async communication
-- [ ] **Service Discovery**: Implement service registry and discovery
+#### Month 3: Subscription Service (SaaS Foundation)
+**Week 9-10: `erp-subscription-service` Foundation**
+- [ ] **Repository Setup**: Initialize subscription service
+- [ ] **Subscription Models**: Plan, subscription, invoice models
+- [ ] **Payment Integration**: Stripe and PayPal integration
+- [ ] **Feature Gating**: Subscription-based access control
 
-**Week 11-12: Monitoring and Observability**
-- [ ] **Logging**: Centralized logging with ELK stack
-- [ ] **Metrics**: Prometheus and Grafana setup
-- [ ] **Tracing**: Distributed tracing with Jaeger
+**Week 11-12: Billing and Usage Tracking**
+- [ ] **Billing Engine**: Automated billing and invoicing
+- [ ] **Usage Tracking**: Real-time usage monitoring
+- [ ] **Customer Portal**: Self-service subscription management
+- [ ] **Integration**: Connect with auth service for feature gating
 
-### Phase 2: Core Business Services (Months 4-8)
+### Phase 2: Core Business Services (Months 4-13)
 
-#### Month 4: HRM Service
-**Week 13-14: `erp-hrm-service` Foundation**
+#### Month 4-5: CRM Service
+**Week 13-14: `erp-crm-service` Foundation**
 - [ ] **Repository Setup**: Initialize with service template
+- [ ] **Database Models**: Contact, Lead, Opportunity models
+- [ ] **Basic APIs**: CRUD operations for core entities
+- [ ] **Subscription Integration**: Feature gating and usage tracking
+
+**Week 15-16: CRM Features**
+- [ ] **Contact Management**: Complete contact lifecycle
+- [ ] **Sales Pipeline**: Lead to opportunity conversion
+- [ ] **Activity Tracking**: Communication and task logging
+- [ ] **Testing**: Unit and integration tests
+
+#### Month 6-7: HRM Service
+**Week 17-18: `erp-hrm-service` Foundation**
+- [ ] **Repository Setup**: Initialize HRM service
 - [ ] **Database Models**: Employee, Department, Leave models
 - [ ] **Basic APIs**: CRUD operations for core entities
-- [ ] **Authentication**: Integrate with auth service
+- [ ] **Subscription Integration**: User limits and feature gating
 
-**Week 15-16: HRM Features**
+**Week 19-20: HRM Features**
 - [ ] **Employee Management**: Complete employee lifecycle
 - [ ] **Leave System**: Leave application and approval workflow
 - [ ] **Attendance**: Time tracking and attendance management
-- [ ] **Testing**: Unit and integration tests
-
-#### Month 5: CRM Service
-**Week 17-18: `erp-crm-service` Foundation**
-- [ ] **Repository Setup**: Initialize CRM service
-- [ ] **Database Models**: Contact, Lead, Opportunity models
-- [ ] **Basic APIs**: CRUD operations for CRM entities
-- [ ] **Integration**: Connect with notification service
-
-**Week 19-20: CRM Features**
-- [ ] **Contact Management**: Advanced contact features
-- [ ] **Sales Pipeline**: Lead to opportunity conversion
-- [ ] **Activity Tracking**: Communication and task logging
-- [ ] **Analytics**: Basic CRM reporting and metrics
+- [ ] **Analytics**: Basic HRM reporting and metrics
 
 #### Month 6: Finance Service
 **Week 21-22: `erp-finance-service` Foundation**
@@ -365,16 +373,17 @@ erp-shared-libs (updated) →
 
 ## Team Structure and Ownership
 
-### Development Teams (8 Teams)
+### Development Teams (9 Teams)
 1. **Platform Team** (4 people): Infrastructure, API Gateway, Shared Libraries, Notifications, Files
 2. **Auth Team** (2 people): Authentication service
-3. **HRM Team** (3 people): HRM service
+3. **Subscription Team** (3 people): Subscription & billing service (SaaS core)
 4. **CRM Team** (3 people): CRM service
-5. **Finance Team** (3 people): Finance service
-6. **Inventory Team** (3 people): Inventory service
-7. **Project Team** (2 people): Project management service
-8. **AI Team** (4 people): AI platform and chatbot
-9. **Frontend Team** (4 people): Web and mobile applications
+5. **HRM Team** (3 people): HRM service
+6. **Finance Team** (3 people): Finance service
+7. **Inventory Team** (3 people): Inventory service
+8. **Project Team** (2 people): Project management service
+9. **AI Team** (4 people): AI platform and chatbot
+10. **Frontend Team** (4 people): Web and mobile applications
 
 ### Cross-Team Coordination
 - **Architecture Review Board**: Weekly architecture decisions

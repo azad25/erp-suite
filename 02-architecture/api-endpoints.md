@@ -56,6 +56,118 @@ Response:
 }
 ```
 
+## Subscription & Billing Management APIs
+
+### REST Subscription Endpoints
+
+```http
+# Subscription Management
+GET    /subscriptions
+POST   /subscriptions
+GET    /subscriptions/{id}
+PUT    /subscriptions/{id}
+DELETE /subscriptions/{id}
+POST   /subscriptions/{id}/upgrade
+POST   /subscriptions/{id}/downgrade
+POST   /subscriptions/{id}/cancel
+POST   /subscriptions/{id}/reactivate
+
+# Plan Management
+GET    /subscriptions/plans
+GET    /subscriptions/plans/{id}
+POST   /subscriptions/plans/compare
+GET    /subscriptions/plans/features
+
+# Billing Management
+GET    /billing/invoices
+GET    /billing/invoices/{id}
+POST   /billing/invoices/{id}/pay
+GET    /billing/invoices/{id}/pdf
+GET    /billing/payment-methods
+POST   /billing/payment-methods
+PUT    /billing/payment-methods/{id}
+DELETE /billing/payment-methods/{id}
+
+# Usage Tracking
+POST   /usage/track
+GET    /usage/summary
+GET    /usage/limits
+GET    /usage/analytics
+
+# Feature Access
+GET    /features/check/{feature}
+GET    /features/available
+POST   /features/request-access
+```
+
+#### Subscription Creation Example
+```http
+POST /subscriptions
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "plan_id": "plan-professional",
+  "payment_method": "pm_stripe_token",
+  "trial_days": 14,
+  "billing_cycle": "monthly"
+}
+
+Response:
+{
+  "id": "sub-uuid",
+  "plan": {
+    "id": "plan-professional",
+    "name": "Professional",
+    "price": 99.00,
+    "billing_cycle": "monthly"
+  },
+  "status": "trial",
+  "trial_start": "2024-01-15T00:00:00Z",
+  "trial_end": "2024-01-29T00:00:00Z",
+  "current_period_start": "2024-01-15T00:00:00Z",
+  "current_period_end": "2024-02-15T00:00:00Z",
+  "features": [
+    "crm_advanced",
+    "hrm_full",
+    "accounting_basic"
+  ],
+  "usage_limits": {
+    "users": 25,
+    "api_calls": 10000,
+    "storage_gb": 100
+  },
+  "created_at": "2024-01-15T10:00:00Z"
+}
+```
+
+#### Usage Tracking Example
+```http
+POST /usage/track
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "feature": "api_calls",
+  "quantity": 1,
+  "metadata": {
+    "endpoint": "/crm/contacts",
+    "method": "POST",
+    "user_id": "user-uuid"
+  }
+}
+
+Response:
+{
+  "success": true,
+  "current_usage": 8547,
+  "limit": 10000,
+  "remaining": 1453,
+  "overage": 0,
+  "reset_date": "2024-02-01T00:00:00Z"
+}
+```
+
 ## Human Resource Management (HRM) APIs
 
 ### REST HRM Endpoints

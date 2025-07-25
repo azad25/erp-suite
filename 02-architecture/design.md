@@ -28,6 +28,7 @@ graph TB
     subgraph "Application Layer"
         Gateway[API Gateway]
         Auth[Auth Service]
+        Subscription[Subscription Service]
         CRM[CRM Service]
         HR[HR Service]
         Accounting[Accounting Service]
@@ -55,6 +56,7 @@ graph TB
     RAG --> Vector
     RAG --> LLM
     Gateway --> Auth
+    Gateway --> Subscription
     Gateway --> CRM
     Gateway --> HR
     Gateway --> Accounting
@@ -63,6 +65,7 @@ graph TB
     Gateway --> Analytics
     
     Auth --> PostgreSQL
+    Subscription --> PostgreSQL
     CRM --> PostgreSQL
     HR --> PostgreSQL
     Accounting --> PostgreSQL
@@ -70,6 +73,7 @@ graph TB
     Projects --> PostgreSQL
     Analytics --> MongoDB
     
+    Subscription --> Kafka
     CRM --> Kafka
     HR --> Kafka
     Accounting --> Kafka
@@ -129,6 +133,27 @@ class RBACManager:
     def check_permission(self, user: User, resource: str, action: str) -> bool
     def get_user_roles(self, user: User, organization: Organization) -> List[Role]
     def enforce_data_isolation(self, query: Query, organization_id: str) -> Query
+
+#### Subscription & Billing Service Interface
+```python
+class SubscriptionService:
+    def create_subscription(self, org_id: str, plan_id: str, payment_method: str) -> Subscription
+    def upgrade_subscription(self, subscription_id: str, new_plan_id: str) -> Subscription
+    def cancel_subscription(self, subscription_id: str, reason: str) -> Subscription
+    def check_feature_access(self, org_id: str, feature: str) -> bool
+    def track_usage(self, org_id: str, feature: str, quantity: int) -> UsageRecord
+    def get_usage_summary(self, org_id: str, period: DateRange) -> UsageSummary
+
+class BillingService:
+    def generate_invoice(self, subscription_id: str, period: BillingPeriod) -> Invoice
+    def process_payment(self, invoice_id: str) -> PaymentResult
+    def handle_payment_failure(self, payment_id: str, reason: str) -> RetrySchedule
+    def calculate_proration(self, subscription: Subscription, new_plan: Plan) -> ProrationAmount
+
+class FeatureGateService:
+    def check_access(self, org_id: str, feature: str) -> AccessResult
+    def enforce_limits(self, org_id: str, resource: str, quantity: int) -> LimitResult
+    def get_available_features(self, subscription: Subscription) -> List[Feature]
 ```
 
 #### AI Gateway Service Interface
