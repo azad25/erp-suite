@@ -2,21 +2,22 @@
 
 This folder contains deployment strategies, infrastructure specifications, and operational procedures for the Intelligent ERP Suite.
 
-## Documents
+## 🚀 Quick Deployment
 
-### [multi-repo-microservices-plan.md](./multi-repo-microservices-plan.md)
-**Multi-Repository Microservices Strategy**
-- 13 independent repositories for different services
-- Team organization and development workflows
-- Service communication and coordination patterns
-- Release management and versioning strategies
+1. **[infrastructure-makefile.md](./infrastructure-makefile.md)** - One-command development environment setup
+2. **[kubernetes-infrastructure-plan.md](./kubernetes-infrastructure-plan.md)** - Production Kubernetes deployment
+3. **[helm-charts-structure.md](./helm-charts-structure.md)** - Helm chart configurations
 
-### [optional-enhancements.md](./optional-enhancements.md)
-**Future Enhancements and Roadmap**
-- Advanced AI features and capabilities
-- Additional integrations and modules
-- Performance optimizations
-- Scalability improvements
+## 📋 Deployment Files
+
+### Core Deployment
+- **[multi-repo-microservices-plan.md](./multi-repo-microservices-plan.md)** - 14-repository microservices deployment strategy
+- **[kubernetes-infrastructure-plan.md](./kubernetes-infrastructure-plan.md)** - Kubernetes-native infrastructure plan
+- **[helm-charts-structure.md](./helm-charts-structure.md)** - Helm chart structure and configurations
+- **[infrastructure-makefile.md](./infrastructure-makefile.md)** - Development automation and deployment scripts
+
+### Future Enhancements
+- **[optional-enhancements.md](./optional-enhancements.md)** - Future roadmap and advanced features
 
 ## Deployment Overview
 

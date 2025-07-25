@@ -105,6 +105,39 @@ services/core/
 │   │   ├── services.py
 │   │   ├── tests/
 │   │   └── migrations/
+│   ├── subscriptions/
+│   │   ├── __init__.py
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── subscription.py
+│   │   │   ├── plan.py
+│   │   │   ├── invoice.py
+│   │   │   ├── payment.py
+│   │   │   └── usage.py
+│   │   ├── services/
+│   │   │   ├── __init__.py
+│   │   │   ├── subscription_service.py
+│   │   │   ├── billing_service.py
+│   │   │   ├── payment_service.py
+│   │   │   ├── usage_service.py
+│   │   │   └── feature_service.py
+│   │   ├── integrations/
+│   │   │   ├── __init__.py
+│   │   │   ├── stripe_integration.py
+│   │   │   ├── paypal_integration.py
+│   │   │   └── webhook_handlers.py
+│   │   ├── middleware/
+│   │   │   ├── __init__.py
+│   │   │   ├── feature_gate.py
+│   │   │   └── usage_tracking.py
+│   │   ├── serializers/
+│   │   ├── views/
+│   │   ├── urls.py
+│   │   ├── admin.py
+│   │   ├── tasks.py
+│   │   ├── signals.py
+│   │   ├── tests/
+│   │   └── migrations/
 │   ├── hrm/
 │   │   ├── __init__.py
 │   │   ├── models/

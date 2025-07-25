@@ -23,6 +23,14 @@ graph TB
         RBAC[RBAC Service]
     end
     
+    subgraph "SaaS Foundation Layer - Django"
+        SUBSCRIPTION[Subscription Service]
+        BILLING[Billing Service]
+        USAGE_TRACKER[Usage Tracking]
+        FEATURE_GATE[Feature Gating]
+        PAYMENT_PROCESSOR[Payment Processing]
+    end
+    
     subgraph "Business Services Layer - Django"
         HRM[HRM Service]
         CRM[CRM Service]
@@ -76,11 +84,27 @@ graph TB
     
     RATE_LIMIT --> AUTH
     RATE_LIMIT --> TENANT
-    RATE_LIMIT --> HRM
-    RATE_LIMIT --> CRM
-    RATE_LIMIT --> FINANCE
-    RATE_LIMIT --> INVENTORY
-    RATE_LIMIT --> PROJECTS
+    RATE_LIMIT --> SUBSCRIPTION
+    
+    AUTH --> SUBSCRIPTION
+    TENANT --> SUBSCRIPTION
+    SUBSCRIPTION --> FEATURE_GATE
+    
+    FEATURE_GATE --> HRM
+    FEATURE_GATE --> CRM
+    FEATURE_GATE --> FINANCE
+    FEATURE_GATE --> INVENTORY
+    FEATURE_GATE --> PROJECTS
+    
+    SUBSCRIPTION --> BILLING
+    BILLING --> PAYMENT_PROCESSOR
+    PAYMENT_PROCESSOR --> PAYMENT
+    
+    USAGE_TRACKER --> HRM
+    USAGE_TRACKER --> CRM
+    USAGE_TRACKER --> FINANCE
+    USAGE_TRACKER --> INVENTORY
+    USAGE_TRACKER --> PROJECTS
     
     HRM --> INVOICE
     FINANCE --> REPORTS
@@ -144,6 +168,13 @@ graph LR
         RBAC[Authorization]
         TENANT[Multi-Tenancy]
         
+        subgraph "SaaS Foundation"
+            SUBSCRIPTION_BL[Subscription Logic]
+            BILLING_BL[Billing Logic]
+            FEATURE_GATE_BL[Feature Gating]
+            USAGE_TRACK_BL[Usage Tracking]
+        end
+        
         subgraph "Business Logic"
             HRM_BL[HRM Logic]
             CRM_BL[CRM Logic]
@@ -192,12 +223,23 @@ graph LR
     
     AUTH --> RBAC
     RBAC --> TENANT
+    TENANT --> SUBSCRIPTION_BL
     
-    TENANT --> HRM_BL
-    TENANT --> CRM_BL
-    TENANT --> FIN_BL
-    TENANT --> INV_BL
-    TENANT --> PROJ_BL
+    SUBSCRIPTION_BL --> FEATURE_GATE_BL
+    FEATURE_GATE_BL --> HRM_BL
+    FEATURE_GATE_BL --> CRM_BL
+    FEATURE_GATE_BL --> FIN_BL
+    FEATURE_GATE_BL --> INV_BL
+    FEATURE_GATE_BL --> PROJ_BL
+    
+    USAGE_TRACK_BL --> HRM_BL
+    USAGE_TRACK_BL --> CRM_BL
+    USAGE_TRACK_BL --> FIN_BL
+    USAGE_TRACK_BL --> INV_BL
+    USAGE_TRACK_BL --> PROJ_BL
+    
+    SUBSCRIPTION_BL --> BILLING_BL
+    BILLING_BL --> PAYMENT_GW
     
     HRM_BL --> CRUD
     CRM_BL --> CRUD
@@ -229,42 +271,134 @@ graph LR
     AI_PLUGINS --> VECTOR_DB
 ```
 
-## Data Flow Architecture
+## SaaS Subscription Flow Architecture
+
+```mermaid
+graph TB
+    subgraph "Customer Journey"
+        TRIAL[Free Trial Signup]
+        CONVERT[Trial Conversion]
+        SUBSCRIBE[Active Subscription]
+        UPGRADE[Plan Upgrade]
+        CANCEL[Cancellation]
+    end
+    
+    subgraph "Subscription Management"
+        PLANS[Subscription Plans]
+        LIFECYCLE[Lifecycle Management]
+        BILLING_CYCLE[Billing Cycles]
+        PRORATION[Proration Logic]
+    end
+    
+    subgraph "Payment Processing"
+        STRIPE[Stripe Integration]
+        PAYPAL[PayPal Integration]
+        SQUARE[Square Integration]
+        WEBHOOK[Payment Webhooks]
+        RETRY[Payment Retry Logic]
+    end
+    
+    subgraph "Feature Control"
+        GATE[Feature Gates]
+        LIMITS[Usage Limits]
+        ACCESS[Access Control]
+        DEGRADATION[Graceful Degradation]
+    end
+    
+    subgraph "Usage Tracking"
+        METER[Usage Metering]
+        ANALYTICS[Usage Analytics]
+        ALERTS[Limit Alerts]
+        OVERAGE[Overage Billing]
+    end
+    
+    subgraph "Customer Portal"
+        DASHBOARD[Billing Dashboard]
+        INVOICES[Invoice Management]
+        PAYMENTS[Payment Methods]
+        SUPPORT[Support Integration]
+    end
+    
+    TRIAL --> CONVERT
+    CONVERT --> SUBSCRIBE
+    SUBSCRIBE --> UPGRADE
+    SUBSCRIBE --> CANCEL
+    
+    SUBSCRIBE --> PLANS
+    PLANS --> LIFECYCLE
+    LIFECYCLE --> BILLING_CYCLE
+    BILLING_CYCLE --> PRORATION
+    
+    BILLING_CYCLE --> STRIPE
+    BILLING_CYCLE --> PAYPAL
+    BILLING_CYCLE --> SQUARE
+    STRIPE --> WEBHOOK
+    PAYPAL --> WEBHOOK
+    SQUARE --> WEBHOOK
+    WEBHOOK --> RETRY
+    
+    PLANS --> GATE
+    GATE --> LIMITS
+    LIMITS --> ACCESS
+    ACCESS --> DEGRADATION
+    
+    ACCESS --> METER
+    METER --> ANALYTICS
+    ANALYTICS --> ALERTS
+    ALERTS --> OVERAGE
+    
+    SUBSCRIBE --> DASHBOARD
+    DASHBOARD --> INVOICES
+    DASHBOARD --> PAYMENTS
+    DASHBOARD --> SUPPORT
+```
+
+## Data Flow Architecture with Subscription Validation
 
 ```mermaid
 sequenceDiagram
     participant Client
     participant Gateway
     participant Auth
+    participant SubscriptionService
+    participant FeatureGate
     participant BusinessService
+    participant UsageTracker
     participant Database
     participant EventBus
-    participant Microservice
-    participant AI
+    participant BillingService
     
     Client->>Gateway: HTTP Request
     Gateway->>Auth: Validate Token
     Auth->>Gateway: User Context + Permissions
-    Gateway->>BusinessService: Authorized Request
     
-    BusinessService->>Database: Query/Update Data
-    Database->>BusinessService: Data Response
+    Gateway->>SubscriptionService: Check Subscription Status
+    SubscriptionService->>Gateway: Subscription Details
     
-    BusinessService->>EventBus: Publish Domain Event
-    EventBus->>Microservice: Event Notification
-    Microservice->>Database: Process Event
+    Gateway->>FeatureGate: Validate Feature Access
+    FeatureGate->>Gateway: Access Decision
     
-    alt AI Query
-        BusinessService->>AI: RAG Query with Context
-        AI->>Database: Retrieve Relevant Data
-        AI->>AI: Generate Response
-        AI->>BusinessService: AI Response
+    alt Feature Allowed
+        Gateway->>BusinessService: Authorized Request
+        BusinessService->>UsageTracker: Track Usage
+        BusinessService->>Database: Query/Update Data
+        Database->>BusinessService: Data Response
+        
+        BusinessService->>EventBus: Publish Domain Event
+        EventBus->>BillingService: Usage Event
+        BillingService->>Database: Update Usage Records
+        
+        BusinessService->>Gateway: Business Response
+        Gateway->>Client: HTTP Response
+    else Feature Blocked
+        Gateway->>Client: 403 Subscription Required
     end
     
-    BusinessService->>Gateway: Business Response
-    Gateway->>Client: HTTP Response
-    
-    EventBus->>Client: WebSocket Notification (if subscribed)
+    alt Usage Limit Exceeded
+        UsageTracker->>BillingService: Trigger Overage Billing
+        BillingService->>EventBus: Overage Event
+        EventBus->>Client: Usage Alert Notification
+    end
 ```
 
 ## RAG Integration Architecture
@@ -448,6 +582,16 @@ graph TB
             TENANTS[tenants]
             PLUGINS[plugins]
             SYSTEM[system_config]
+            SUBSCRIPTION_PLANS[subscription_plans]
+            PAYMENT_METHODS[payment_methods]
+        end
+        
+        subgraph "Subscription Schema"
+            SUB_SCHEMA[subscriptions]
+            TENANT_SUBS[tenant_subscriptions]
+            USAGE_RECORDS[usage_records]
+            BILLING_HISTORY[billing_history]
+            INVOICES_SHARED[invoices]
         end
     end
     
@@ -519,6 +663,13 @@ graph TB
         ISOLATION[Data Isolation]
     end
     
+    subgraph "Subscription Context"
+        SUB_STATUS[Subscription Status]
+        FEATURE_ACCESS[Feature Access Check]
+        USAGE_LIMITS[Usage Limit Validation]
+        BILLING_STATUS[Billing Status]
+    end
+    
     LOGIN --> JWT
     JWT --> MFA
     MFA --> RBAC_ENGINE
@@ -536,7 +687,15 @@ graph TB
     TENANT_ID --> TENANT_SCOPE
     TENANT_SCOPE --> ISOLATION
     
+    JWT --> SUB_STATUS
+    SUB_STATUS --> FEATURE_ACCESS
+    FEATURE_ACCESS --> USAGE_LIMITS
+    USAGE_LIMITS --> BILLING_STATUS
+    
     ISOLATION --> FILTER
+    FEATURE_ACCESS --> GUARD
+    USAGE_LIMITS --> FILTER
+    BILLING_STATUS --> AUDIT
 ```
 
 This architecture provides a comprehensive view of the enterprise ERP system with clear separation of concerns, scalable microservices architecture, optional AI integration, and robust security measures.

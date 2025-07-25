@@ -132,16 +132,19 @@ PERMISSIONS = {
 
 ## Business Domain Services
 
-### 4. Subscription & Billing Service (Django)
+### 4. Subscription & Billing Service (Django) - SaaS Foundation
 
 **Responsibilities:**
-- Subscription lifecycle management
-- Multi-provider payment processing
-- Usage tracking and metering
-- Feature access control and gating
-- Trial management and conversion
-- Customer billing portal
+- Subscription lifecycle management (create, upgrade, downgrade, cancel)
+- Multi-provider payment processing (Stripe, PayPal, Square)
+- Usage tracking and metering across all ERP modules
+- Feature access control and gating middleware
+- Trial management and conversion optimization
+- Customer self-service billing portal
 - Revenue analytics and reporting
+- Automated dunning and payment retry logic
+- Plan versioning and migration handling
+- Tax calculation and compliance
 
 **Service Structure:**
 ```python

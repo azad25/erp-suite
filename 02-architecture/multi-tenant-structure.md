@@ -69,6 +69,69 @@ CREATE TABLE shared.tenant_plugins (
     is_enabled BOOLEAN DEFAULT true,
     PRIMARY KEY (tenant_id, plugin_id)
 );
+
+-- Subscription and billing tables (shared across tenants)
+CREATE TABLE shared.subscription_plans (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'USD',
+    billing_cycle VARCHAR(20) DEFAULT 'monthly', -- monthly, quarterly, yearly
+    features JSONB DEFAULT '{}',
+    limits JSONB DEFAULT '{}',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE shared.tenant_subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES shared.tenants(id),
+    plan_id UUID REFERENCES shared.subscription_plans(id),
+    status VARCHAR(20) DEFAULT 'active', -- active, cancelled, expired, trial
+    trial_ends_at TIMESTAMP,
+    current_period_start TIMESTAMP NOT NULL,
+    current_period_end TIMESTAMP NOT NULL,
+    cancel_at_period_end BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE shared.usage_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES shared.tenants(id),
+    subscription_id UUID REFERENCES shared.tenant_subscriptions(id),
+    feature VARCHAR(100) NOT NULL,
+    quantity INTEGER DEFAULT 1,
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    billing_period_start TIMESTAMP NOT NULL,
+    billing_period_end TIMESTAMP NOT NULL
+);
+
+CREATE TABLE shared.invoices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES shared.tenants(id),
+    subscription_id UUID REFERENCES shared.tenant_subscriptions(id),
+    invoice_number VARCHAR(50) UNIQUE NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'USD',
+    status VARCHAR(20) DEFAULT 'pending', -- pending, paid, failed, cancelled
+    due_date TIMESTAMP NOT NULL,
+    paid_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE shared.payment_methods (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES shared.tenants(id),
+    provider VARCHAR(50) NOT NULL, -- stripe, paypal, square
+    provider_payment_method_id VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL, -- card, bank_account, paypal
+    is_default BOOLEAN DEFAULT false,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ### 2. Tenant-Specific Schema Structure

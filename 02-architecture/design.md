@@ -28,7 +28,10 @@ graph TB
     subgraph "Application Layer"
         Gateway[API Gateway]
         Auth[Auth Service]
+        Tenant[Tenant Service]
         Subscription[Subscription Service]
+        Billing[Billing Service]
+        FeatureGate[Feature Gating Service]
         CRM[CRM Service]
         HR[HR Service]
         Accounting[Accounting Service]
@@ -56,13 +59,17 @@ graph TB
     RAG --> Vector
     RAG --> LLM
     Gateway --> Auth
-    Gateway --> Subscription
-    Gateway --> CRM
-    Gateway --> HR
-    Gateway --> Accounting
-    Gateway --> Inventory
-    Gateway --> Projects
-    Gateway --> Analytics
+    Gateway --> Tenant
+    Auth --> Subscription
+    Tenant --> Subscription
+    Subscription --> FeatureGate
+    Subscription --> Billing
+    FeatureGate --> CRM
+    FeatureGate --> HR
+    FeatureGate --> Accounting
+    FeatureGate --> Inventory
+    FeatureGate --> Projects
+    FeatureGate --> Analytics
     
     Auth --> PostgreSQL
     Subscription --> PostgreSQL
