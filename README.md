@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Architecture](https://img.shields.io/badge/architecture-14--repositories-green.svg)](./05-deployment/multi-repo-microservices-plan.md)
 [![Dev-First](https://img.shields.io/badge/dev--first-make%20up-blue.svg)](./03-implementation/dev-first-setup.md)
-[![AI-Powered](https://img.shields.io/badge/AI-RAG%20Enabled-purple.svg)](./ai-chatbot-design.md)
+[![AI-Powered](https://img.shields.io/badge/AI-RAG%20Enabled-purple.svg)](./04-modules/04-ai-module/)
 
 ## 🛠️ Technology Stack
 
@@ -139,22 +139,46 @@ The Intelligent ERP Suite is a **dev-first, multi-repository SaaS platform** bui
 ```
 📁 intelligent-erp-suite-specs/
 ├── 📂 .kiro/                   # Kiro IDE specifications
+├── 📂 00-project-overview/     # Project overview & introduction
+│   └── 📄 README.md            # Project introduction
+├── 📂 01-requirements/         # Business requirements & specifications
+│   ├── 📄 README.md            # Requirements overview
+│   └── 📄 requirements.md      # Detailed requirements
 ├── 📂 02-architecture/         # System architecture & API design
-│   ├── �  api-endpoints.md     # REST API specifications
-│   └── � SAAS_AsRCHITECTURE_UPDATES.md # SaaS transformation details
+│   ├── 📄 README.md            # Architecture overview
+│   ├── 📄 api-endpoints.md     # REST API specifications
+│   ├── 📄 SAAS_ARCHITECTURE_UPDATES.md # SaaS transformation details
+│   ├── 📄 design.md            # System design patterns
+│   ├── 📄 tech-stack.md        # Technology stack decisions
+│   └── 📄 multi-tenant-structure.md # Multi-tenancy architecture
 ├── 📂 03-implementation/       # Development guides & patterns
-│   ├── � d4ev-first-setup.md   # One-command development setup
-│   ├── � rb-ac-patterns.md     # Shared RBAC utilities
-│   ├── � 0docker-compose-dev.md # 14-service orchestration
-│   └── � infrastrcucture-makefile.md # Development commands
-├── 📂 05-deployment/           # Deployment strategies
-│   └── � multni-repo-microservices-plan.md # 14-repository deployment
-├── 📂 modules/                 # Service specifications
+│   ├── 📄 README.md            # Implementation overview
+│   ├── 📄 dev-first-setup.md   # One-command development setup
+│   ├── 📄 rbac-patterns.md     # Shared RBAC utilities
+│   ├── 📄 docker-compose-dev.md # 14-service orchestration
+│   └── 📄 infrastructure-makefile.md # Development commands
+├── 📂 04-modules/              # Service specifications
+│   ├── 📄 README.md            # Modules overview
 │   ├── 📄 MODULE_SPECIFICATIONS.md # All 14 services overview
-│   └── � M[service-folders]/   # Individual service specs
+│   ├── 📂 01-auth-module/      # Authentication service specs
+│   ├── 📂 02-crm-module/       # CRM service specs
+│   ├── 📂 02-subscription-module/ # Subscription service specs
+│   ├── 📂 03-hrm-module/       # HRM service specs
+│   ├── 📂 04-ai-module/        # AI platform specs
+│   ├── 📂 05-integration-module/ # Integration service specs
+│   ├── 📂 06-accounting-module/ # Accounting service specs
+│   ├── 📂 07-inventory-module/ # Inventory service specs
+│   ├── 📂 08-project-module/   # Project management specs
+│   └── 📂 09-frontend-app/     # Frontend application specs
+├── 📂 05-deployment/           # Deployment strategies
+│   ├── 📄 README.md            # Deployment overview
+│   ├── 📄 multi-repo-microservices-plan.md # 14-repository deployment
+│   ├── 📄 kubernetes-infrastructure-plan.md # K8s deployment
+│   └── 📄 helm-charts-structure.md # Helm charts structure
 ├── 📄 MODULAR_DEVELOPMENT_PLAN.md # Multi-repository development strategy
-├── 📄 ai-chatbot-design.md     # AI platform & RAG implementation
-├── 📄 application-flow.md      # Request flow across services
+├── 📄 PROJECT_STRUCTURE.md    # Project structure documentation
+├── 📄 SAAS_TRANSFORMATION_SUMMARY.md # SaaS transformation summary
+├── 📄 TASK_LIST.md             # Development task list
 └── 📄 README.md                # This file
 ```
 
@@ -162,12 +186,14 @@ The Intelligent ERP Suite is a **dev-first, multi-repository SaaS platform** bui
 
 | Section | Description | Key Documents |
 |---------|-------------|---------------|
+| **[Project Overview](./00-project-overview/README.md)** | Project introduction & goals | Business context & objectives |
+| **[Requirements](./01-requirements/README.md)** | Business requirements & specifications | Functional & non-functional requirements |
+| **[Architecture](./02-architecture/README.md)** | System architecture & design | Multi-tenant SaaS architecture |
 | **[Dev-First Setup](./03-implementation/dev-first-setup.md)** | `make up` - Start all 14 services instantly | Hot reloading & seeded data |
-| **[Multi-Repository Plan](./MODULAR_DEVELOPMENT_PLAN.md)** | 14-service development strategy | Independent development & deployment |
-| **[Service Specifications](./modules/MODULE_SPECIFICATIONS.md)** | All 14 services overview | Tech stacks & dependencies |
+| **[Service Modules](./04-modules/README.md)** | All 14 services overview | Individual service specifications |
 | **[RBAC Patterns](./03-implementation/rbac-patterns.md)** | Shared authentication utilities | Common auth & tenant isolation |
 | **[SaaS Architecture](./02-architecture/SAAS_ARCHITECTURE_UPDATES.md)** | Subscription-driven design | Feature gating & billing integration |
-| **[AI Platform](./ai-chatbot-design.md)** | RAG chatbot & local LLM | Permission-aware AI assistance |
+| **[AI Platform](./04-modules/04-ai-module/)** | RAG chatbot & local LLM | Permission-aware AI assistance |
 | **[Deployment](./05-deployment/multi-repo-microservices-plan.md)** | 14-repository deployment | Independent service deployment |
 
 ## 🎯 Getting Started
@@ -191,15 +217,15 @@ make up
 
 ### For Project Managers
 1. 📖 Read [Multi-Repository Development Plan](./MODULAR_DEVELOPMENT_PLAN.md)
-2. � RReview [14-Service Architecture](./modules/MODULE_SPECIFICATIONS.md)
-3. � Ctheck [SaaS Foundation Timeline](./02-architecture/SAAS_ARCHITECTURE_UPDATES.md)
-4. �  Monitor independent service development progress
+2. 📋 Review [14-Service Architecture](./04-modules/MODULE_SPECIFICATIONS.md)
+3. 📊 Check [SaaS Foundation Timeline](./02-architecture/SAAS_ARCHITECTURE_UPDATES.md)
+4. 📈 Monitor independent service development progress
 
 ### For Architects & Tech Leads
 1. 🏗️ Study [14-Repository Architecture](./05-deployment/multi-repo-microservices-plan.md)
 2. 🔧 Review [Shared RBAC Patterns](./03-implementation/rbac-patterns.md)
 3. 🚀 Examine [Dev-First Setup](./03-implementation/dev-first-setup.md)
-4. 🛠️ Plan [Service Integration Strategies](./application-flow.md)
+4. 🛠️ Plan [Service Integration Strategies](./02-architecture/design.md)
 
 ### For DevOps Engineers
 1. 🛠️ Review [Docker Compose Development](./03-implementation/docker-compose-dev.md)
