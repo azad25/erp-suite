@@ -5,6 +5,55 @@
 [![Dev-First](https://img.shields.io/badge/dev--first-make%20up-blue.svg)](./03-implementation/dev-first-setup.md)
 [![AI-Powered](https://img.shields.io/badge/AI-RAG%20Enabled-purple.svg)](./ai-chatbot-design.md)
 
+## 🛠️ Technology Stack
+
+### Backend & APIs
+![Python](https://img.shields.io/badge/Python_3.11+-3776AB?style=flat&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django_4.2+-092E20?style=flat&logo=django&logoColor=white)
+![Django REST](https://img.shields.io/badge/Django_REST_Framework-ff1709?style=flat&logo=django&logoColor=white)
+![Go](https://img.shields.io/badge/Go_1.21+-00ADD8?style=flat&logo=go&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+![Chi Router](https://img.shields.io/badge/Chi_Router-00ADD8?style=flat&logo=go&logoColor=white)
+
+### Frontend & UI
+![Next.js](https://img.shields.io/badge/Next.js_14+-000000?style=flat&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-FF6B35?style=flat&logo=react&logoColor=white)
+![React Query](https://img.shields.io/badge/React_Query-FF4154?style=flat&logo=react-query&logoColor=white)
+
+### Databases & Storage
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
+![Qdrant](https://img.shields.io/badge/Qdrant-FF6B6B?style=flat&logo=qdrant&logoColor=white)
+![AWS S3](https://img.shields.io/badge/AWS_S3-569A31?style=flat&logo=amazon-s3&logoColor=white)
+
+### AI & Machine Learning
+![Ollama](https://img.shields.io/badge/Ollama-000000?style=flat&logo=ollama&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat&logo=langchain&logoColor=white)
+![LLaMA 2](https://img.shields.io/badge/LLaMA_2-FF6B35?style=flat&logo=meta&logoColor=white)
+![CodeLlama](https://img.shields.io/badge/CodeLlama-FF6B35?style=flat&logo=meta&logoColor=white)
+![Mistral](https://img.shields.io/badge/Mistral-FF6B35?style=flat&logo=mistral&logoColor=white)
+
+### DevOps & Infrastructure
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=flat&logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=kubernetes&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-623CE4?style=flat&logo=terraform&logoColor=white)
+![Helm](https://img.shields.io/badge/Helm-0F1689?style=flat&logo=helm&logoColor=white)
+![Air](https://img.shields.io/badge/Air-00ADD8?style=flat&logo=go&logoColor=white)
+
+### Monitoring & Testing
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat&logo=prometheus&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat&logo=grafana&logoColor=white)
+![pytest](https://img.shields.io/badge/pytest-0A9EDC?style=flat&logo=pytest&logoColor=white)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white)
+
+### Payment & SaaS
+![Stripe](https://img.shields.io/badge/Stripe-008CDD?style=flat&logo=stripe&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=json-web-tokens&logoColor=white)
+
 > **A dev-first, subscription-based SaaS ERP platform with 14 independent microservices and embedded AI capabilities**
 
 ## 🚀 Project Overview
