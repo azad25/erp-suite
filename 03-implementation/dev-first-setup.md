@@ -24,8 +24,9 @@ cd erp-infrastructure
 make up
 
 # Wait 2-3 minutes for all services to start and seed data
-# Then open http://localhost:3000 for the frontend
-# API Gateway available at http://localhost:8080
+# Then open http://localhost:3000 for the frontend (if using full-stack profile)
+# GraphQL Gateway available at http://localhost:4000/graphql
+# API Gateway available at http://localhost:8000
 ```
 
 ## What `make up` Does
@@ -71,24 +72,35 @@ make health
 
 ## Service URLs
 
-| Service | URL | Description |
-|---------|-----|-------------|
-| Frontend | http://localhost:3000 | Main ERP interface |
-| API Gateway | http://localhost:8080 | API entry point |
-| Auth Service | http://localhost:8001 | Authentication |
-| Subscription Service | http://localhost:8002 | Billing & subscriptions |
-| CRM Service | http://localhost:8003 | Customer management |
-| HRM Service | http://localhost:8004 | Human resources |
-| Accounting Service | http://localhost:8005 | Finance & accounting |
-| Inventory Service | http://localhost:8006 | Inventory management |
-| Project Service | http://localhost:8007 | Project management |
-| AI Platform | http://localhost:8008 | AI services |
-| Notification Service | http://localhost:8009 | Notifications |
-| File Service | http://localhost:8010 | File management |
+| Service | URL | Description | Profile |
+|---------|-----|-------------|---------|
+| **API Layer** | | | |
+| GraphQL Gateway | http://localhost:4000/graphql | Unified API endpoint | `api-layer` |
+| GraphQL Playground | http://localhost:4000/playground | API exploration | `api-layer` |
+| gRPC Registry | http://localhost:8500 | Service discovery | `api-layer` |
+| WebSocket Server | http://localhost:3001 | Real-time communication | `api-layer` |
+| **Application Services** | | | |
+| Frontend | http://localhost:3000 | Main ERP interface | `full-stack` |
+| Django Core | http://localhost:8000 | Core API gateway | `full-stack` |
+| Auth Service | http://localhost:8080 | Authentication | `full-stack` |
+| **Infrastructure** | | | |
+| PostgreSQL | localhost:5432 | Primary database | `infrastructure` |
+| MongoDB | localhost:27017 | Analytics & logs | `infrastructure` |
+| Redis | localhost:6379 | Cache & sessions | `infrastructure` |
+| Kafka | localhost:9092 | Event streaming | `infrastructure` |
+| **Monitoring** | | | |
+| Prometheus | http://localhost:9090 | Metrics collection | `monitoring` |
+| Grafana | http://localhost:3000 | Dashboards | `monitoring` |
+| Jaeger | http://localhost:16686 | Distributed tracing | `monitoring` |
 
 ## Development Dashboard
 
-Access the development dashboard at http://localhost:3000/dev which provides:
+Access the development tools:
+- **GraphQL Playground**: http://localhost:4000/playground for API exploration
+- **Consul UI**: http://localhost:8500 for service registry
+- **Grafana Dashboard**: http://localhost:3000 for monitoring (if using monitoring profile)
+
+The development environment provides:
 
 - Service health status
 - Database connection status
@@ -253,9 +265,10 @@ make db-query service=erp-crm-service query="SELECT * FROM contacts LIMIT 5"
 ```
 
 ### Performance Monitoring
-- Prometheus: http://localhost:9090
-- Grafana: http://localhost:3001
-- Jaeger: http://localhost:16686
+- Prometheus: http://localhost:${PROMETHEUS_PORT:-9090}
+- Grafana: http://localhost:${GRAFANA_PORT:-3000} (if not conflicting with frontend)
+- Jaeger: http://localhost:${JAEGER_UI_PORT:-16686}
+- GraphQL Metrics: http://localhost:${GRAPHQL_GATEWAY_PORT:-4000}/metrics
 
 ## Troubleshooting
 
@@ -294,7 +307,8 @@ make debug-reload
 1. Check service health: `make health`
 2. View logs: `make logs service=<service-name>`
 3. Reset environment: `make reset`
-4. Check documentation: http://localhost:3000/dev
+4. Check GraphQL Playground: http://localhost:4000/playground
+5. Check service registry: http://localhost:8500
 
 ## Production Deployment
 

@@ -28,16 +28,18 @@ help: ## Show this help message
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-20s$(RESET) %s\n", $1, $2}'
 
-up: clone-repos ## Start all services with hot reloading
+up: prepare-environment ## Start all services with hot reloading
 	@echo "$(GREEN)🚀 Starting Intelligent ERP Suite...$(RESET)"
-	@docker-compose -f $(COMPOSE_FILE) up -d
+	@docker compose --profile infrastructure --profile api-layer --profile monitoring up -d
 	@echo "$(GREEN)⏳ Waiting for services to start...$(RESET)"
 	@sleep 30
 	@$(MAKE) seed-data
 	@echo "$(GREEN)✅ All services started!$(RESET)"
-	@echo "$(BLUE)Frontend: http://localhost:3000$(RESET)"
-	@echo "$(BLUE)API Gateway: http://localhost:8080$(RESET)"
-	@echo "$(BLUE)Dev Dashboard: http://localhost:3000/dev$(RESET)"
+	@echo "$(BLUE)GraphQL Gateway: http://localhost:4000/graphql$(RESET)"
+	@echo "$(BLUE)GraphQL Playground: http://localhost:4000/playground$(RESET)"
+	@echo "$(BLUE)Service Registry: http://localhost:8500$(RESET)"
+	@echo "$(BLUE)Frontend: http://localhost:3000$(RESET)" # (if using full-stack profile)
+	@echo "$(BLUE)Django Core: http://localhost:8000$(RESET)" # (if using full-stack profile)
 ```
 
 This comprehensive Makefile provides all the automation needed for the development and deployment workflow of the Intelligent ERP Suite.

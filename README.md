@@ -211,8 +211,9 @@ make up
 # ✅ All services running with hot reloading
 # ✅ Seeded databases with realistic test data  
 # ✅ Local LLM (Ollama) ready for AI development
-# ✅ API documentation at http://localhost:8080/docs
-# ✅ Frontend at http://localhost:3000
+# ✅ GraphQL API at http://localhost:4000/graphql
+# ✅ API documentation at http://localhost:4000/playground
+# ✅ Frontend at http://localhost:3000 (full-stack profile)
 ```
 
 ### For Project Managers

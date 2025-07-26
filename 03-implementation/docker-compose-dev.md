@@ -422,8 +422,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
-      - NEXT_PUBLIC_AUTH_URL=http://localhost:8001
+      - NEXT_PUBLIC_API_URL=http://localhost:${DJANGO_PORT:-8000}
+      - NEXT_PUBLIC_GRAPHQL_URL=http://localhost:${GRAPHQL_GATEWAY_PORT:-4000}/graphql
+      - NEXT_PUBLIC_AUTH_URL=http://localhost:${AUTH_SERVICE_HTTP_PORT:-8080}
       - NODE_ENV=development
     volumes:
       - ../erp-frontend:/app
